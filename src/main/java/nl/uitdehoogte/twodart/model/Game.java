@@ -141,6 +141,7 @@ public class Game extends Model
         this.turnCount = turnCount;
     }
 
+    @JsonIgnore
     public Turn getLastTurn()
     {
         return turns.get(turns.size() - 1);
@@ -151,6 +152,7 @@ public class Game extends Model
         this.turnCount++;
     }
     
+    @JsonIgnore
     public int getRemaining(Player player)
     {
         return player.getId().equals(player1.getId()) 

@@ -5,10 +5,14 @@
  */
 package nl.uitdehoogte.twodart.services;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotAuthorizedException;
+import nl.uitdehoogte.twodart.model.AI;
+import nl.uitdehoogte.twodart.model.AIX01;
 import nl.uitdehoogte.twodart.model.Game;
 import nl.uitdehoogte.twodart.model.Player;
 import nl.uitdehoogte.twodart.model.Throw;
@@ -21,12 +25,16 @@ import nl.uitdehoogte.twodart.persistence.GameDAO;
  */
 public class GameService extends BaseService
 {
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    
     private final GameDAO gameDAO;
+    private final AI ai;
     
     @Inject
-    public GameService(GameDAO gameDAO)
+    public GameService(GameDAO gameDAO, AIX01 ai)
     {
         this.gameDAO = gameDAO;
+        this.ai = ai;
     }
     
     public Game get(String id)
@@ -87,6 +95,37 @@ public class GameService extends BaseService
         }
         
         switchActivePlayer(game);
+        
+        logger.info("Player switched");
+        
+        if(!game.isFinished() && game.getActivePlayer().isAiPlayer())
+        {
+            logger.info("Get Ai Turn");
+            
+            Turn aiTurn = getAiTurn(game);
+            
+            logger.info("Ai score: " + aiTurn.getScore());
+            
+            return aiTurn;
+        }
+        
+        logger.info("Human player");
+        
+        return null;
+    }
+    
+    private Turn getAiTurn(Game game)
+    {
+        List<Throw> playerThrows = new ArrayList<>();
+        Player player = game.getActivePlayer();
+        int remaining = game.getRemaining(player);
+        
+        Throw playerThrow = ai.artificialThrow(player.getSkillLevel(), remaining);
+        
+        playerThrows.add(playerThrow);
+        
+        Turn turn = new Turn();
+        turn.setPlayerThrows(playerThrows);
         
         return turn;
     }

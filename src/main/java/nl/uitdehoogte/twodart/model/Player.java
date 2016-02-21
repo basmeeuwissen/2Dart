@@ -5,7 +5,6 @@
  */
 package nl.uitdehoogte.twodart.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import java.security.Principal;
 import javax.persistence.Column;
@@ -49,6 +48,11 @@ public class Player extends Model implements Principal
     @Column
     private boolean aiPlayer = false;
 
+    @NotNull
+    @JsonView(Views.Public.class)
+    @Column
+    private int skillLevel = 1;
+    
     public String getEmail()
     {
         return email;
@@ -93,5 +97,15 @@ public class Player extends Model implements Principal
     public void setAiPlayer(boolean aiPlayer)
     {
         this.aiPlayer = aiPlayer;
+    }
+
+    public int getSkillLevel()
+    {
+        return skillLevel;
+    }
+
+    public void setSkillLevel(int SkillLevel)
+    {
+        this.skillLevel = SkillLevel;
     }
 }
