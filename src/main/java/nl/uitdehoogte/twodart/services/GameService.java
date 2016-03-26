@@ -7,7 +7,6 @@ package nl.uitdehoogte.twodart.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotAuthorizedException;
@@ -18,6 +17,7 @@ import nl.uitdehoogte.twodart.model.Player;
 import nl.uitdehoogte.twodart.model.Throw;
 import nl.uitdehoogte.twodart.model.Turn;
 import nl.uitdehoogte.twodart.persistence.GameDAO;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -96,20 +96,21 @@ public class GameService extends BaseService
         
         switchActivePlayer(game);
         
-        logger.info("Player switched");
-        
         if(!game.isFinished() && game.getActivePlayer().isAiPlayer())
         {
-            logger.info("Get Ai Turn");
-            
             Turn aiTurn = getAiTurn(game);
             
-            logger.info("Ai score: " + aiTurn.getScore());
+            game.addTurn(aiTurn);
+
+            if(game.getRemaining(game.getActivePlayer()) == 0)
+            {
+                game.setFinished(true);
+            }            
+            
+            switchActivePlayer(game);
             
             return aiTurn;
         }
-        
-        logger.info("Human player");
         
         return null;
     }
@@ -120,11 +121,34 @@ public class GameService extends BaseService
         Player player = game.getActivePlayer();
         int remaining = game.getRemaining(player);
         
-        Throw playerThrow = ai.artificialThrow(player.getSkillLevel(), remaining);
-        
-        playerThrows.add(playerThrow);
-        
         Turn turn = new Turn();
+        
+        turn.setCreationDate();
+        turn.setPlayer(player);
+        turn.setGame(game);        
+        
+        for(int i = 0; i < 3; i++)
+        {
+            Throw playerThrow = ai.artificialThrow(player.getSkillLevel(), remaining);
+            
+            playerThrow.setCreationDate();
+            playerThrow.setTurn(turn);
+            
+            remaining -= playerThrow.getScore() * playerThrow.getMultiplier();
+            
+            playerThrows.add(playerThrow);    
+            
+            if(remaining <= 0)
+            {
+                break;
+            }
+        }
+        
+        int score = updateScore(game, player, playerThrows);
+        
+        turn.setPlayerThrows(playerThrows);
+        turn.setScore(score);;
+        
         turn.setPlayerThrows(playerThrows);
         
         return turn;

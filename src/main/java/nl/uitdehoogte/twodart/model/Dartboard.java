@@ -12,6 +12,7 @@ import static java.lang.Math.floor;
 import static java.lang.Math.pow;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
+import static java.lang.Math.abs;
 
 /**
  *
@@ -24,7 +25,7 @@ public class Dartboard
                       maxX = 100,
                       minY = -100,
                       maxY = 100,
-                      center = Math.round((maxY - minY) / 2);
+                      center = 0;
 
     
     private final int [] slices = new int []{20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5, 20};
@@ -45,7 +46,7 @@ public class Dartboard
         // hoek + 9 voor de verschuiving van de hoek
         // Hoek 0 begint namelijk in het midden van de 20
         int slice = slices[(int)floor((boxPosition.getAngle() + 9) / 18)];
-        double percentage = (100 / center) * boxPosition.getDistance();
+        double percentage = abs(boxPosition.getDistance());
         Score score = new Score();
         
         if (percentage < 100)
@@ -71,8 +72,8 @@ public class Dartboard
     
     public BoxPosition getBoxPosition(XYPosition xyPosition)
     {
-        double width = xyPosition.getX() - (center + minX),
-               height = xyPosition.getY() - (center + minY),
+        double width = xyPosition.getX(),// - (center + minX),
+               height = xyPosition.getY(),// - (center + minY),
                distance = sqrt(pow(width, 2) + pow(height, 2)),
                angle = atan(width / height) * 180 / PI;
 

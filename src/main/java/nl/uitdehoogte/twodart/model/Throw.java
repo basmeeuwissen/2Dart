@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import nl.uitdehoogte.twodart.Views;
 import org.hibernate.validator.constraints.Range;
+import static java.lang.Math.round;
 
 /**
  *
@@ -34,7 +35,7 @@ public class Throw extends Model
     private int score;
     
     @NotNull
-    @Range(min=1, max=3)
+    @Range(min=0, max=3)
     @JsonView(Views.Public.class)
     @Column
     private int multiplier;
@@ -46,7 +47,7 @@ public class Throw extends Model
     private double angle;
     
     @NotNull
-    @Range(min=0, max=100)
+    @Range(min=0)
     @JsonView(Views.Public.class)
     @Column
     private double distance;
@@ -88,7 +89,7 @@ public class Throw extends Model
 
     public void setAngle(double angle)
     {
-        this.angle = angle;
+        this.angle = round(angle * 100.0) / 100.0;
     }
 
     public double getDistance()
@@ -98,7 +99,7 @@ public class Throw extends Model
 
     public void setDistance(double distance)
     {
-        this.distance = distance;
+        this.distance = round(distance * 100.0) / 100.0;
     }
     
 }

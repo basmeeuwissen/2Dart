@@ -21,6 +21,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import nl.uitdehoogte.twodart.Views;
 import nl.uitdehoogte.twodart.model.Game;
+import nl.uitdehoogte.twodart.model.Turn;
 import nl.uitdehoogte.twodart.model.Player;
 import nl.uitdehoogte.twodart.model.Throw;
 import nl.uitdehoogte.twodart.services.GameService;
@@ -85,11 +86,11 @@ public class GameResource
     @JsonView(Views.Public.class)
     @UnitOfWork
     @Path("/{id}/turns")
-    public void addTurns(@Auth Player player, @PathParam("id") String id, List<Throw> playerThrows)
+    public Turn addTurns(@Auth Player player, @PathParam("id") String id, List<Throw> playerThrows)
     {
         Game game = gameService.get(id);
         
-        gameService.addTurn(game, player, playerThrows);
+        return gameService.addTurn(game, player, playerThrows);
     }
     
     @GET
