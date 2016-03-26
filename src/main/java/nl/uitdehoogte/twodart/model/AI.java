@@ -22,7 +22,7 @@ public abstract class AI
      */
     int [] aiDifficultyLevels = new int[]
     {
-        11, 10, 9, 8, 7, 6, 5, 4, 3, 2
+        15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2
     };
     
     private static final Dartboard dartboard = new Dartboard();
@@ -49,8 +49,8 @@ public abstract class AI
         Score score = artificialThrow(remaining);
         XYPosition xyPosition = dartboard.getXYPosition(score.getValue(), score.getMultiplier());
 
-        xyPosition.incrementX(randn(aiDifficultyLevels[difficulty]));
-        xyPosition.incrementY(randn(aiDifficultyLevels[difficulty]));
+        xyPosition.incrementX(randn(difficulty));
+        xyPosition.incrementY(randn(difficulty));
 
         BoxPosition boxPosition = dartboard.getBoxPosition(xyPosition);
         

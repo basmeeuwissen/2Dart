@@ -138,7 +138,7 @@ public class GameService extends BaseService
             
             playerThrows.add(playerThrow);    
             
-            if(remaining <= 0)
+            if(remaining <= 1)
             {
                 break;
             }
@@ -147,7 +147,7 @@ public class GameService extends BaseService
         int score = updateScore(game, player, playerThrows);
         
         turn.setPlayerThrows(playerThrows);
-        turn.setScore(score);;
+        turn.setScore(score);
         
         turn.setPlayerThrows(playerThrows);
         
@@ -220,6 +220,10 @@ public class GameService extends BaseService
         if (remaining == 0)
         {
             return validateLastPlayerThrow(playerThrows.get(playerThrows.size() - 1));
+        }
+        else if(remaining == 1)
+        {
+            return false;
         }
         
         return true;

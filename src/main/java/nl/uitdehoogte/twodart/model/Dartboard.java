@@ -72,8 +72,8 @@ public class Dartboard
     
     public BoxPosition getBoxPosition(XYPosition xyPosition)
     {
-        double width = xyPosition.getX(),// - (center + minX),
-               height = xyPosition.getY(),// - (center + minY),
+        double width = xyPosition.getX(),
+               height = xyPosition.getY(),
                distance = sqrt(pow(width, 2) + pow(height, 2)),
                angle = atan(width / height) * 180 / PI;
 
