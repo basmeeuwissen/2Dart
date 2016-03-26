@@ -86,7 +86,7 @@ public class GameResource
     @JsonView(Views.Public.class)
     @UnitOfWork
     @Path("/{id}/turns")
-    public Turn addTurns(@Auth Player player, @PathParam("id") String id, List<Throw> playerThrows)
+    public List<Turn> addTurns(@Auth Player player, @PathParam("id") String id, List<Throw> playerThrows)
     {
         Game game = gameService.get(id);
         

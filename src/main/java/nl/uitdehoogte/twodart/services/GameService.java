@@ -65,12 +65,14 @@ public class GameService extends BaseService
         return game;
     }
     
-    public Turn addTurn(Game game, Player player, List<Throw> playerThrows)
+    public List<Turn> addTurn(Game game, Player player, List<Throw> playerThrows)
     {
         validateNotFinished(game);
         validateSelf(game.getActivePlayer(), player);
         
         int score = updateScore(game, player, playerThrows);
+        
+        List<Turn> turns = new ArrayList<>();
         
         Turn turn = new Turn();
                 
@@ -79,6 +81,8 @@ public class GameService extends BaseService
         turn.setPlayerThrows(playerThrows);
         turn.setScore(score);
         turn.setGame(game);
+        
+        turns.add(turn);
         
         game.addTurn(turn);
         game.setModificationDate();
@@ -109,10 +113,10 @@ public class GameService extends BaseService
             
             switchActivePlayer(game);
             
-            return aiTurn;
+            turns.add(aiTurn);
         }
         
-        return null;
+        return turns;
     }
     
     private Turn getAiTurn(Game game)
