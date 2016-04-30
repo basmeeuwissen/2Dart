@@ -1,3 +1,13 @@
+assets:
+  mappings:
+    /assets: /
+  overrides:
+    /: ../TwoDartClient/public_html/
+
+server:
+  rootPath: /api/*
+  adminContextPath: /admin
+
 database:
   # the name of your JDBC driver
   driverClass: com.mysql.jdbc.Driver

@@ -8,11 +8,12 @@ package nl.uitdehoogte.twodart;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
-import com.google.inject.AbstractModule;
 import com.hubspot.dropwizard.guice.GuiceBundle;
 import com.hubspot.dropwizard.guice.GuiceBundle.Builder;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.Application;
+import io.dropwizard.ConfiguredBundle;
+import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -20,7 +21,6 @@ import nl.uitdehoogte.twodart.model.Game;
 import nl.uitdehoogte.twodart.model.Player;
 import nl.uitdehoogte.twodart.model.Throw;
 import nl.uitdehoogte.twodart.model.Turn;
-import nl.uitdehoogte.twodart.resources.PlayerResource;
 import nl.uitdehoogte.twodart.services.AuthenticationService;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
@@ -43,6 +43,8 @@ public class App extends Application<Config>
         
         bootstrap.addBundle(hibernateBundle);
         bootstrap.addBundle(guiceBundle);
+        
+        bootstrap.addBundle((ConfiguredBundle)new ConfiguredAssetsBundle("/assets/", "/client", "index.html"));
     }
 
     private GuiceBundle initializeGuice(Class<Config> configurationClass, Module module)
